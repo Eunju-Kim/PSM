@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.eunju.perfectswingmanager.MainActivity">
+
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/imageView1"
+        android:layout_width="275dp"
+        android:layout_height="400dp"
+        app:srcCompat="@drawable/logo"
+        tools:layout_editor_absoluteY="63dp"
+        tools:layout_editor_absoluteX="55dp" />
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnDriver"
+            android:layout_gravity="center"
+            android:layout_width="124dp"
+            android:layout_height="117dp"
+            android:text="드라이버"
+            tools:layout_editor_absoluteX="55dp"
+            tools:layout_editor_absoluteY="303dp" />
+
+        <Button
+            android:id="@+id/btnIron"
+            android:layout_gravity="center"
+            android:layout_width="123dp"
+            android:layout_height="116dp"
+            android:text="아이언"
+            tools:layout_editor_absoluteY="303dp"
+            tools:layout_editor_absoluteX="207dp" />
+    </LinearLayout>
+
+
+</LinearLayout>
