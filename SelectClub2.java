@@ -11,7 +11,7 @@ import android.widget.ImageButton;
  * Created by Eunju on 2017-04-24.
  */
 
-public class SelectClub extends ActionBarActivity {
+public class SelectClub2 extends ActionBarActivity {
     ImageButton btndriver, btniron, imageButton;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +24,7 @@ public class SelectClub extends ActionBarActivity {
         btndriver.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ShowCamera.class);
+                Intent intent = new Intent(getApplicationContext(), ShowMyVideo.class);
                 intent.putExtra("club", 1);
                 startActivity(intent);
             }
@@ -32,7 +32,7 @@ public class SelectClub extends ActionBarActivity {
         btniron.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ShowCamera.class);
+                Intent intent = new Intent(getApplicationContext(), ShowMyVideo.class);
                 intent.putExtra("club", 2);
                 startActivity(intent);
             }

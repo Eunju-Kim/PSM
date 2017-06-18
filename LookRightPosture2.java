@@ -17,7 +17,7 @@ public class LookRightPosture2 extends Activity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_main);
 
-
+        ImageButton button4 = (ImageButton)findViewById(R.id.button4);
         ImageButton btn1 = (ImageButton)findViewById(R.id.btn1);
         ImageButton btn2 = (ImageButton)findViewById(R.id.btn2);
         ImageButton btn3 = (ImageButton)findViewById(R.id.btn3);
@@ -26,6 +26,8 @@ public class LookRightPosture2 extends Activity implements View.OnClickListener 
         btn2.setOnClickListener(this);
         btn3.setOnClickListener(this);
         btn4.setOnClickListener(this);
+        button4.setOnClickListener(this);
+
 
     }
 
@@ -36,24 +38,28 @@ public class LookRightPosture2 extends Activity implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.btn1:
-                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.basic;
-                it.putExtra("uri", uri_path);
-                startActivity(it);
+//                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.basic;
+//                it.putExtra("uri", uri_path);
+//                startActivity(it);
                 break;
             case R.id.btn2:
-                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.grip;
-                it.putExtra("uri", uri_path);
-                startActivity(it);
+//                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.grip;
+//                it.putExtra("uri", uri_path);
+//                startActivity(it);
                 break;
             case R.id.btn3:
-                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.iron_grip;
-                it.putExtra("uri", uri_path);
-                startActivity(it);
+//                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.iron_grip;
+//                it.putExtra("uri", uri_path);
+//                startActivity(it);
                 break;
             case R.id.btn4:
-                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.driver_grip;
-                it.putExtra("uri", uri_path);
-                startActivity(it);
+//                uri_path = "android.resource://com.example.eunju.perfectswingmanager/"+R.raw.driver_grip;
+//                it.putExtra("uri", uri_path);
+//                startActivity(it);
+                break;
+            case R.id.button4:
+                Intent intent = new Intent(getApplicationContext(), StartActivity.class);
+                startActivity(intent);
                 break;
         }
     }

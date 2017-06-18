@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 public class StartActivity extends ActionBarActivity{
     ImageButton practiceSwing;
     ImageButton right_attitude;
+    ImageButton showMyVideo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +22,7 @@ public class StartActivity extends ActionBarActivity{
         setContentView(R.layout.start);  // layout xml 과 자바파일을 연결
         right_attitude = (ImageButton)findViewById(R.id.button3);
         practiceSwing = (ImageButton) findViewById(R.id.button) ;
+        showMyVideo = (ImageButton)findViewById(R.id.button2);
         practiceSwing.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -33,6 +35,13 @@ public class StartActivity extends ActionBarActivity{
             @Override
             public void onClick(View view) {
                 Intent it = new Intent(StartActivity.this, LookRightPosture2.class);
+                startActivity(it);
+            }
+        });
+        showMyVideo.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(StartActivity.this, SelectClub2.class);
                 startActivity(it);
             }
         });

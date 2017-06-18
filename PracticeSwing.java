@@ -1,5 +1,6 @@
 package com.example.eunju.perfectswingmanager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -8,8 +9,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -21,10 +24,15 @@ import com.github.mikephil.charting.data.BarEntry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -44,6 +52,8 @@ public class PracticeSwing extends ActionBarActivity {
             this.right = right;
         }
     }
+    ImageButton home2;
+
 
     HttpURLConnection connection;
     ArrayList<ProData> arrayList;
@@ -138,14 +148,24 @@ public class PracticeSwing extends ActionBarActivity {
     BarDataSet barDataSet1,barDataSet2;
     BarChart barChart;
     ArrayList<BarDataSet> dataset;
+    VideoView videoView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.practice_swing);  // layout xml 과 자바파일을 연결
 
         Intent intent = getIntent();
-        int club = intent.getExtras().getInt("club");
-        String uri = intent.getExtras().getString("uri");
+        String path = intent.getExtras().getString("uri");
+       // Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
+        home2 = (ImageButton)findViewById(R.id.home2);
+        home2.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(getApplicationContext(), StartActivity.class);
+                startActivity(it);
+            }
+        });
+    //    insertURLtoDB(path, String.valueOf(club));
 //        if(club == 1){
 //
 //        }else{
@@ -162,7 +182,7 @@ public class PracticeSwing extends ActionBarActivity {
 //            }
 //        });
         arrayList = new ArrayList<ProData>();
-        final VideoView videoView = (VideoView) findViewById(R.id.End_Show_Video);
+        videoView = (VideoView) findViewById(R.id.End_Show_Video);
         // 받아오는 부분 //
         RequestTask requestTask = new RequestTask();
         requestTask.execute("https://cushines.xyz/psm/select_weight.php?proID=p0001");
@@ -260,12 +280,74 @@ public class PracticeSwing extends ActionBarActivity {
 
         //videoView.setVideoURL(url);
         videoView.setMediaController(mediaController);
-        String path = intent.getExtras().getString("uri");
                 //Environment.getExternalStorageDirectory().getAbsolutePath();+"/DCIM/Camera/20170303_134429.mp4"
-        Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
+
         videoView.setVideoPath(path);
         videoView.start();
+        //insertURLtoDB(path, String.valueOf(club));
 
+
+    }
+    private void insertURLtoDB(String url, String club){
+
+        class InsertData extends AsyncTask<String, Void, String> {
+            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(getApplicationContext(), "Please Wait", null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                //Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                try{
+                    String m_url = (String)params[0];
+                    String m_club = (String)params[1];
+
+                    String link="https://cushines.xyz/psm/insert_url.php";
+                    String data  = URLEncoder.encode("url", "UTF-8") + "=" + URLEncoder.encode(m_url, "UTF-8");
+                    data += "&" + URLEncoder.encode("club", "UTF-8") + "=" + URLEncoder.encode(m_club, "UTF-8");
+
+                    URL url = new URL(link);
+                    URLConnection conn = url.openConnection();
+
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                    wr.write( data );
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+
+                    // Read Server Response
+                    while((line = reader.readLine()) != null)
+                    {
+                        sb.append(line);
+                        break;
+                    }
+                    return sb.toString();
+                }
+                catch(Exception e){
+                    return new String("Exception: " + e.getMessage());
+                }
+            }
+        }
+
+        InsertData task = new InsertData();
+        task.execute(url, club);
     }
 
 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/original"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    tools:context="com.example.eunju.perfectswingmanager.MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="176dp"
+        android:layout_height="187dp"
+        app:srcCompat="@drawable/logo"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="54dp"
+        android:layout_marginEnd="54dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="63dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="295dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.58"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="251dp"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/btnDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="50dp"
+                android:background="@android:color/transparent"
+                android:foregroundGravity="center"
+                android:src="@drawable/driver"
+                android:text="드라이버"
+                tools:layout_editor_absoluteX="55dp"
+                tools:layout_editor_absoluteY="303dp" />
+
+            <ImageButton
+                android:id="@+id/btnIron"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="25dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/iron"
+                android:text="아이언"
+                tools:layout_editor_absoluteX="207dp"
+                tools:layout_editor_absoluteY="303dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.18"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@android:color/transparent"
+                android:src="@drawable/home" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

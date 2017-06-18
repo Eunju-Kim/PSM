@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.hardware.camera2.CameraDevice;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,8 +15,13 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Button;
-import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
@@ -39,6 +45,7 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
     private static String EXTERNAL_STORAGE_PATH = "";
     private static String filename = "";
     private String fileuri="";
+    int club;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,7 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
         setContentView(R.layout.show_camera);
 
         Intent intent = getIntent();
-        final int club = intent.getExtras().getInt("club");
+        club = intent.getExtras().getInt("club");
 
         mCameraView = (SurfaceView)findViewById(R.id.cameraView);
         mCamera = Camera.open();
@@ -80,11 +87,11 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
                 values.put(MediaStore.Audio.Media.DATA, filename);
 
                 Uri videoUri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-
                 if (videoUri == null) {
                     Log.d("SampleVideoRecorder", "Video insert failed.");
                     return;
                 }
+                //insertURLtoDB(videoUri.toString(), String.valueOf(club));
 
                 Intent intent = new Intent(getApplicationContext(), PracticeSwing.class);
                 intent.putExtra("club", club);
@@ -94,7 +101,7 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
             }
         };
         m_timer = new Timer();
-        m_timer.schedule(m_Task, 3000);
+        m_timer.schedule(m_Task, 4000);
 
     }
     public void surfaceCreated(SurfaceHolder holder) {
@@ -122,13 +129,14 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
             // 저장될 파일 지정
             filename = createFilename();
             recorder.setOutputFile(filename);
-
             // 녹화도중에 녹화화면을 뷰에다가 출력하게 해주는 설정
             recorder.setPreviewDisplay(holder.getSurface());
 
             // 녹화 준비,시작
             recorder.prepare();
             recorder.start();
+            insertURLtoDB(filename, String.valueOf(club));
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -174,15 +182,10 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
             mCamera.release();
             mCamera = null;
         }
-
     }
     protected void onDestroy() {
         Log.i("test", "onDestroy()dfd");
         m_timer.cancel();
-
-
-
-
 
         super.onDestroy();
     }
@@ -200,7 +203,7 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
         String state = Environment.getExternalStorageState();
         // Environment.MEDIA_MOUNTED 외장메모리가 마운트 flog
         if (!state.equals(Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(getApplicationContext(), "외장 메모리가 마운트 되지않았습니다.", Toast.LENGTH_LONG).show();
+         //   Toast.makeText(getApplicationContext(), "외장 메모리가 마운트 되지않았습니다.", Toast.LENGTH_LONG).show();
         } else {
             EXTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
         }
@@ -213,7 +216,68 @@ public class ShowCamera extends AppCompatActivity implements SurfaceHolder.Callb
             // 외장 메모리를 사용합니다.
             newFilename = EXTERNAL_STORAGE_PATH + "/" + formatDate + ".mp4";
         }
-        Toast.makeText(getApplicationContext(), newFilename, Toast.LENGTH_LONG).show();
+      //  Toast.makeText(getApplicationContext(), newFilename, Toast.LENGTH_LONG).show();
         return newFilename;
+    }
+
+    private void insertURLtoDB(String url, String club){
+
+        class InsertData extends AsyncTask<String, Void, String> {
+//            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+//                loading = ProgressDialog.show(getApplicationContext(), "Please Wait", null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+//                loading.dismiss();
+         //       Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                try{
+                    String m_url = (String)params[0];
+                    String m_club = (String)params[1];
+
+                    String link="https://cushines.xyz/psm/insert_url.php";
+                    String data  = URLEncoder.encode("url", "UTF-8") + "=" + URLEncoder.encode(m_url, "UTF-8");
+                    data += "&" + URLEncoder.encode("club", "UTF-8") + "=" + URLEncoder.encode(m_club, "UTF-8");
+
+                    URL url = new URL(link);
+                    URLConnection conn = url.openConnection();
+
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                    wr.write( data );
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+
+                    // Read Server Response
+                    while((line = reader.readLine()) != null)
+                    {
+                        sb.append(line);
+                        break;
+                    }
+                    return sb.toString();
+                }
+                catch(Exception e){
+                    return new String("Exception: " + e.getMessage());
+                }
+            }
+        }
+
+        InsertData task = new InsertData();
+        task.execute(url, club);
     }
 }
